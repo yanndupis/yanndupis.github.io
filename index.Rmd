@@ -1,0 +1,30 @@
+---
+output:
+  html_document:
+    toc_float: float
+---
+
+<!--html_preserve-->
+
+<div id="homeContent">
+<div class="band full first rightText">
+  <div class="first ">
+    <img class="imageOne" src="homephoto.jpg"/>
+  </div>
+</div>
+  
+<div class="band full third rightText">
+    <img class="imageTwo" src="photo_linkedin.jpg"/>
+    <div class="bandContent vCenter">
+      <div class="blurb">
+        <div>
+          
+        </div>
+      </div>
+    </div>
+    <div class="name"> Yann Dupis </div>
+  </div>
+</div>
+
+  
+<!--/html_preserve-->

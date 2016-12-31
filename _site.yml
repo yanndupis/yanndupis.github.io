@@ -1,0 +1,21 @@
+name: "my-website"
+theme: "cosmo"
+navbar:
+  title: "Yann Dupis"
+  type: inverse
+  left:
+    - text: "About Me"
+      href: index.html
+    - text: "Projects"
+      href:  projects.html
+  right:
+    - icon: fa-2x fa-github
+      href: https://github.com/yanndupis
+    - icon: fa-2x fa-linkedin
+      href: https://www.linkedin.com/in/yanndupis
+output:
+  html_document:
+    theme: cosmo
+    highlight: textmate
+    css: styles.css
+output_dir: "."
