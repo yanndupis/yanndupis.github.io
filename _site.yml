@@ -2,7 +2,6 @@ name: "my-website"
 theme: "cosmo"
 navbar:
   title: "Yann Dupis"
-  type: inverse
   left:
     - text: "About Me"
       href: index.html
@@ -15,7 +14,7 @@ navbar:
       href: https://www.linkedin.com/in/yanndupis
 output:
   html_document:
-    theme: cosmo
+    theme: paper
     highlight: textmate
     css: styles.css
 output_dir: "."
