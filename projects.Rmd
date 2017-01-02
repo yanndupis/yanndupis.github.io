@@ -1,0 +1,33 @@
+---
+title: "Projects"
+output:
+  html_document:
+    toc_float: false
+---
+
+<!--html_preserve-->
+
+<div class="band full">
+  <div class="bandContent pageIntro"> </div>
+  <div class="bandContent gallerySection">
+    <div class="gallerySectionTitle">Supervised Learning</div>
+    <div class="galleryIntro"> </div>
+    <div class="galleryItems">
+      <div class="galleryItem">
+        <a href="https://github.com/yanndupis/Identify-Fraud-from-Enron-Email"><img class="galleryItemImage" src="image/enron.png"/></a>
+        <a href="https://github.com/yanndupis/Identify-Fraud-from-Enron-Email" class="galleryItemLabel">Identify Fraud from Enron Email</a>
+      </div>
+      <div class="galleryItem">
+        <a href="https://github.com/yanndupis/Building-a-Student-Intervention-System"><img class="galleryItemImage" src="image/student_intervention.png"/></a>
+        <a href="https://github.com/yanndupis/Building-a-Student-Intervention-System" class="galleryItemLabel">Building a Student Intervention System</a>
+      </div>
+      <div class="galleryItem">
+        <a href="https://github.com/yanndupis/Analyzing-the-NYC-subway-dataset">
+        <img class="galleryItemImage" src="image/NYC_subway.png"/></a>
+        <a href="https://github.com/yanndupis/Analyzing-the-NYC-subway-dataset" class="galleryItemLabel">Analyzing the NYC subway dataset</a>
+      </div>
+      </div>
+    </div>
+  </div>
+  
+<!--/html_preserve-->
