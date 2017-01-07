@@ -37,6 +37,15 @@ output:
         <a href="https://github.com/yanndupis/Creating-Customer-Segments" class="galleryItemLabel">Creating Customer Segments</a>
       </div>
       </div>
+
+<div class="gallerySectionTitle">Exploratory Data Analysis</div>
+    <div class="galleryIntro"> </div>
+    <div class="galleryItems">
+      <div class="galleryItem">
+        <a href="https://github.com/yanndupis/Exploratory-Data-Analysis-with-R-Prosper"><img class="galleryItemImage" src="image/Prosper.png"/></a>
+        <a href="https://github.com/yanndupis/Exploratory-Data-Analysis-with-R-Prosper" class="galleryItemLabel">Prosper Dataset</a>
+      </div>
+      </div>
     </div>
   </div>
 <!--/html_preserve-->
