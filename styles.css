@@ -3,9 +3,7 @@ blockquote {
 }
 
 body {
-  font-family: "Source Sans Pro", "Helvetica Neue", 
-  Helvetica Neue, Helvetica, Arial, sans-serif;
-  background-color:#fff;
+  
 
   font-weight: normal;
   color: #404040;
@@ -28,7 +26,7 @@ body {
   background-size: cover;
   position: absolute;
   top:400px;
-  left: 90px;
+  left: 110px;
   z-index: 5;
 }
 
@@ -50,16 +48,19 @@ body {
   font-weight: bold;
   font-size: 200%;
   top:550px;
-  left: 90px;
+  left: 115px;
 }
 
 
 .band .blurb {
-  display: inline-block;
-  padding-top:90px;
-  padding-left:180px;
+
+  line-height: 95%;
+  padding-top:60px;
+  left:300px;
+  padding-right:20%;
+  position: absolute;
   text-align: left;
-  font-size: 20px;
+  font-size: 14px;
 }
 
 .gallerySection, .formatSection {

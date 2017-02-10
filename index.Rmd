@@ -18,6 +18,12 @@ output:
     <div class="bandContent vCenter">
       <div class="blurb">
         <div>
+      <p>I am Data Scientist passionate about machine learning and creating products to help people make better insights.</p>
+
+<p>In my current role, I enjoy collaborating with startups to define, prototype, and scale cognitive solutions (e.g. natural language generation, machine learning etc.) within the organization.</p>
+
+<p>In my free time, you can find me surfing at Ocean Beach (I grew up in a surf town in Southwestern France), indoor rock climbing, playing the guitar, listening to jazz and looking for a good pastrami on rye in the Bay Area.</p>
+
           
         </div>
       </div>
