@@ -1,6 +1,6 @@
 ---
 title: "About"
-image: profile.jpg
+image: profile.png
 about:
   template: jolla
   links:
@@ -16,4 +16,8 @@ about:
 
 ---
 
-About this blog
+I'm a data scientist and research engineer. I held various roles as individual contributor and manager at large corporations and start-ups. The last couple years, I was fortunate to focus on making privacy-perserving machine learning accessible to practitioners. Two examples of my work are [TF-Encrypted](https://github.com/tf-encrypted/tf-encrypted), a framework for encrypted machine learning in TensorFlow and [Moose](https://github.com/tf-encrypted/moose), a secure distributed dataflow framework for encrypted machine learning.
+
+The goal of this blog is to explore my passion for machine learning, privacy and other techincal subjects.
+
+In my free time, you can find me surfing at Ocean Beach (I grew up in a surf town in Southwestern France), playing jazz, indoor rock climbing and looking for a good pastrami on rye in the Bay Area. 
