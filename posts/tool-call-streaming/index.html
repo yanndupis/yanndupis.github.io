@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.1.251">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Yann Dupis">
+<meta name="dcterms.date" content="2026-07-17">
+
+<title>yanndupis.github.io - Testing Tool-Call Streaming with SGLang and llama.cpp</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">yanndupis.github.io</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html">About</a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/"><i class="bi bi-github" role="img">
+</i> 
+ </a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://twitter.com"><i class="bi bi-twitter" role="img">
+</i> 
+ </a>
+  </li>  
+</ul>
+              <div id="quarto-search" class="" title="Search"></div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Testing Tool-Call Streaming with SGLang and llama.cpp</h1>
+                                <div class="quarto-categories">
+                <div class="quarto-category">local models</div>
+                <div class="quarto-category">tool calling</div>
+                <div class="quarto-category">inference</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>Yann Dupis </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">July 17, 2026</p>
+      </div>
+    </div>
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#intro" id="toc-intro" class="nav-link active" data-scroll-target="#intro">Intro</a></li>
+  <li><a href="#what-is-tool-call-streaming" id="toc-what-is-tool-call-streaming" class="nav-link" data-scroll-target="#what-is-tool-call-streaming">What is tool-call streaming?</a></li>
+  <li><a href="#the-experiment" id="toc-the-experiment" class="nav-link" data-scroll-target="#the-experiment">The experiment</a></li>
+  <li><a href="#sglang" id="toc-sglang" class="nav-link" data-scroll-target="#sglang">SGLang</a></li>
+  <li><a href="#llama.cpp-it-works-when-it-works" id="toc-llama.cpp-it-works-when-it-works" class="nav-link" data-scroll-target="#llama.cpp-it-works-when-it-works">llama.cpp: it works (when it works)</a></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+<section id="intro" class="level3">
+<h3 class="anchored" data-anchor-id="intro">Intro</h3>
+<p>A few weeks ago, I was really inspired by Armin’s blog post about local models: <a href="https://lucumr.pocoo.org/2026/5/8/local-models/">Pushing Local Models With Focus And Polish</a>. It does an amazing job of stating the current state, challenges, and why having access to efficient local models matters:</p>
+<blockquote class="blockquote">
+<p>“I really, really want local models to work.</p>
+<p>I want them to work in the very practical sense that I can open my coding agent, pick a local model, and get something that feels competitive enough that I do not immediately switch back to a hosted API after five minutes. There are a lot of reasons why I want this, but the biggest quite frankly is that we’re so early with this stuff, and the thought of locking all the experimentation away from the average developer really upsets me.” — Armin Ronacher</p>
+</blockquote>
+<p>He argues that the main reason local models aren’t competitive yet is that the space is too fragmented. There are many inference engines (llama.cpp, vLLM, MLX), many models to choose from (Qwen 3.6, DeepSeek V4, GLM 5.2, etc.), and many parameters to select such as quantization and context size. The critical mass isn’t big enough to make the entire ecosystem competitive with closed-source options. Instead, he suggests we should pick one model, one inference engine, and a series of defaults—and make that combination very, very good, so we don’t want to switch back to closed-source options right away. He advocates for DeepSeek V4 Flash running on a beefy Mac with the inference engine <a href="https://github.com/antirez/ds4">ds4</a>. I’ll let you read the blog to find out why he’s betting on this combination.</p>
+<p>Since Armin wrote that, events have only reinforced the case for local alternatives—most notably when the US government sent a directive to <a href="https://www.anthropic.com/news/fable-mythos-access">suspend access to Fable 5 and Mythos 5</a>.</p>
+<p>I’ve been wanting to blog again for a long time. I worked for several years at the intersection of privacy and AI, so exploring local models seemed a natural fit. In his post, to illustrate that local solutions are lacking, Armin mentions that local options often don’t support streaming function calls. It might seem like a small detail, but I thought deploying several LLMs using different inference engines and checking whether they stream function calls could be a good way to get a feel for where the local ecosystem actually stands today.</p>
+</section>
+<section id="what-is-tool-call-streaming" class="level3">
+<h3 class="anchored" data-anchor-id="what-is-tool-call-streaming">What is tool-call streaming?</h3>
+<p>Tool calling (or function calling) enables LLMs to interface with external tools and data. It can be any tool: get weather, SQL execution, bash, read files, write files. You just need to define the function signature—name, input parameters, and descriptions—through a JSON schema. The LLM doesn’t call the function directly; it emits a tool-call message containing the function name and arguments. You parse this message, call the actual function, and return the response back to the LLM.</p>
+<p>Streaming consists of emitting one token at a time instead of the entire message at once. Armin argues that the benefit of streaming for tool calls is being able to see if the LLM is actively generating an answer or stuck. But also to interrupt the function call generation early if it’s going in the wrong direction or emitting an undesirable tool call like <code>bash(rm -rf /User/oopsy)</code>. You’re laughing, but this happened recently to this <a href="https://x.com/mattshumer_/status/2075657271401390161?s=20">user</a> with gpt-5.6-sol…</p>
+</section>
+<section id="the-experiment" class="level3">
+<h3 class="anchored" data-anchor-id="the-experiment">The experiment</h3>
+<p>The idea is simple: write one piece of client code that makes a streaming tool-call request, then point it at different inference engines by swapping the <code>base_url</code>. For each one, we’ll watch whether the <code>arguments</code> field of the tool call arrives in small fragments (token-by-token) or in big chunks (whole key/value pairs at once).</p>
+<p>We used the OpenAI Python SDK throughout, since all three targets—OpenAI’s API, SGLang, and llama.cpp—expose an OpenAI-compatible <code>/v1/chat/completions</code> endpoint.</p>
+<p>First, we need a tool. We defined a simple <code>write_file</code> function with type hints and inline comments (using the <a href="https://fastcore.fast.ai/docments.html">docments</a> convention), then used <a href="https://answerdotai.github.io/toolslm/">toolslm</a> to auto-generate the JSON schema from the function signature:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> toolslm.funccall <span class="im">import</span> get_schema</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pathlib <span class="im">import</span> Path</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> write_file(</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    content:<span class="bu">str</span>, <span class="co"># content to be written to disk</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    path:<span class="bu">str</span>,    <span class="co"># path to the file, e.g. /data/foo.txt</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    <span class="co">"Write some text to disk"</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    Path(path).write_text(content)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>get_schema(write_file)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<pre class="text"><code>{'name': 'write_file',
+ 'description': 'Write some text to disk',
+ 'input_schema': {'type': 'object',
+  'properties': {'content': {'description': 'content to be written to disk',
+    'type': 'string'},
+   'path': {'description': 'path to the file, e.g. /data/foo.txt',
+    'type': 'string'}},
+  'required': ['content', 'path']}}</code></pre>
+<p>This produces an Anthropic-style schema with <code>input_schema</code>. Since we’re targeting the OpenAI format, we just need to rename that key to <code>parameters</code> and nest everything under a <code>function</code> key:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> mk_openai_fmt(anth_schema):</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    anth_schema[<span class="st">"parameters"</span>] <span class="op">=</span> anth_schema.pop(<span class="st">"input_schema"</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> {<span class="st">'type'</span>: <span class="st">'function'</span>, <span class="st">'function'</span>: anth_schema}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Now the core of the experiment is a streaming chat completion with the tool attached, accumulating the <code>arguments</code> fragments as they arrive:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> openai <span class="im">import</span> OpenAI</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>client <span class="op">=</span> OpenAI()  <span class="co"># defaults to OpenAI's API</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> client.chat.completions.create(</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    model<span class="op">=</span><span class="st">"gpt-5.5"</span>,</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    messages<span class="op">=</span>[{<span class="st">"role"</span>: <span class="st">"user"</span>,</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>               <span class="st">"content"</span>: <span class="st">"Write 'Local model will win' to data.txt"</span>}],</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    tools<span class="op">=</span>[mk_openai_fmt(get_schema(write_file))],</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    stream<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>args <span class="op">=</span> <span class="st">""</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> chunk <span class="kw">in</span> response:</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>    tcs <span class="op">=</span> chunk.choices[<span class="dv">0</span>].delta.tool_calls</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> tcs:</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>        args <span class="op">+=</span> tcs[<span class="dv">0</span>].function.arguments</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="bu">repr</span>(args))</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">Final:"</span>, args)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<pre class="text"><code>''
+'{"'
+'{"path'
+'{"path":"'
+'{"path":"data'
+'{"path":"data.txt'
+'{"path":"data.txt","'
+'{"path":"data.txt","content'
+'{"path":"data.txt","content":"'
+'{"path":"data.txt","content":"Local'
+'{"path":"data.txt","content":"Local model'
+'{"path":"data.txt","content":"Local model will'
+'{"path":"data.txt","content":"Local model will win'
+'{"path":"data.txt","content":"Local model will win"}'
+
+Final: {"path":"data.txt","content":"Local model will win"}</code></pre>
+<p>Here, we can see that OpenAI is generating one token at a time for the tool call. Now let’s see if the local engines match it.</p>
+</section>
+<section id="sglang" class="level3">
+<h3 class="anchored" data-anchor-id="sglang">SGLang</h3>
+<p>For the first local engine, I deployed Qwen 3.6 27B (FP8) on <a href="https://modal.com">Modal</a> using SGLang. I used a repo I’d previously built <a href="https://github.com/yanndupis/pi-modal-deploy">pi-modal-deploy</a> which deploys SGLang on Modal GPUs and exposes an OpenAI-compatible <code>/v1</code> endpoint. It took care of the model weights, SGLang server config, and speculative decoding, so I could just point the OpenAI SDK at the Modal URL.</p>
+<p>Same client code, just a different <code>base_url</code>:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>client <span class="op">=</span> OpenAI(</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    base_url<span class="op">=</span><span class="st">"https://yanndupis--pi-modal-qwen3-6-27b-fp8-sglangserver.us-east.modal.direct/v1"</span>,</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    api_key<span class="op">=</span>os.environ[<span class="st">"PI_MODAL_API_KEY"</span>],</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> client.chat.completions.create(</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    model<span class="op">=</span><span class="st">"Qwen/Qwen3.6-27B-FP8"</span>,</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    messages<span class="op">=</span>[{<span class="st">"role"</span>: <span class="st">"user"</span>,</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>               <span class="st">"content"</span>: <span class="st">"Write 'Local model will win' to data.txt"</span>}],</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    tools<span class="op">=</span>[mk_openai_fmt(get_schema(write_file))],</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>    stream<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>    extra_body<span class="op">=</span>{<span class="st">"chat_template_kwargs"</span>: {<span class="st">"enable_thinking"</span>: <span class="va">False</span>}},</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>args <span class="op">=</span> <span class="st">""</span></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> chunk <span class="kw">in</span> response:</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>    tcs <span class="op">=</span> chunk.choices[<span class="dv">0</span>].delta.tool_calls</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> tcs:</span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>        args <span class="op">+=</span> tcs[<span class="dv">0</span>].function.arguments</span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="bu">repr</span>(args))</span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">Final:"</span>, args)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Here’s what came back:</p>
+<pre class="text"><code>'{"content": "Local model will win"'
+'{"content": "Local model will win","path": "data.txt"}'
+
+Final: {"content": "Local model will win","path": "data.txt"}</code></pre>
+<p>The entire <code>"content"</code> value arrived in <strong>one chunk</strong>. Unlike OpenAI, it arrived in whole key/value pairs rather than token-by-token. SGLang is technically streaming (we got multiple chunks), but the granularity is dramatically coarser.</p>
+<p><strong>Why?</strong> Digging into SGLang’s source in <a href="https://github.com/sgl-project/sglang/blob/main/python/sglang/srt/function_call/base_format_detector.py"><code>base_format_detector.py</code></a>, the streaming parser uses a <code>partial_json_parser</code> library with this flag:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>flags <span class="op">=</span> Allow.ALL <span class="cf">if</span> <span class="va">self</span>.current_tool_name_sent <span class="cf">else</span> Allow.ALL <span class="op">&amp;</span> <span class="op">~</span>Allow.STR</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Before the tool name has been sent, <code>~Allow.STR</code> means partial strings are <strong>not allowed</strong>. After the name is sent, the parser switches to <code>Allow.ALL</code>. The emission is then diff-based: <code>argument_diff</code> comes from <code>json.dumps(cur_arguments)</code> via <code>_find_common_prefix</code>, so the chunks returned by the API are governed by what <code>_partial_json_loads</code> returns, not directly by the model’s raw token slices.</p>
+<p>This makes the parser a plausible source of the coarser chunks, but this experiment doesn’t prove that this specific flag caused the complete <code>"content"</code> value to arrive at once. To confirm that, I would need to instrument the parser and inspect what <code>_partial_json_loads</code> returns for each model token.</p>
+</section>
+<section id="llama.cpp-it-works-when-it-works" class="level3">
+<h3 class="anchored" data-anchor-id="llama.cpp-it-works-when-it-works">llama.cpp: it works (when it works)</h3>
+<p>For the second local engine, I tried llama.cpp. My first attempt was building it from source on a Linux instance—after installing dependencies, compiling, and downloading a model, the output was gibberish, likely a build or quantization issue. So I switched to running <code>llama-server</code> on my Mac, and it worked right away.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>mac_client <span class="op">=</span> OpenAI(</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    base_url<span class="op">=</span><span class="st">"http://127.0.0.1:8080/v1"</span>,</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    api_key<span class="op">=</span><span class="st">"none"</span>,</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>I used the same streaming request for both models:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>resp <span class="op">=</span> mac_client.chat.completions.create(</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    model<span class="op">=</span><span class="st">"qwen"</span>,</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    stream<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    messages<span class="op">=</span>[{</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>        <span class="st">"role"</span>: <span class="st">"user"</span>,</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>        <span class="st">"content"</span>: <span class="st">"Write 'Local model will win' to data.txt"</span>,</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    }],</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>    tools<span class="op">=</span>[mk_openai_fmt(get_schema(write_file))],</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>args <span class="op">=</span> <span class="st">""</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> chunk <span class="kw">in</span> resp:</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>    tcs <span class="op">=</span> chunk.choices[<span class="dv">0</span>].delta.tool_calls</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> tcs:</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>        args <span class="op">+=</span> tcs[<span class="dv">0</span>].function.arguments</span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="bu">repr</span>(args))</span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">Final:"</span>, args)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>I started with <code>Qwen/Qwen2.5-Coder-14B-Instruct-GGUF</code>. But the tool call never arrived as a native <code>tool_calls</code> delta. Instead, it leaked into the response as plain text, wrapped in <code>&lt;function&gt;</code> tags:</p>
+<pre class="text"><code>&lt;function=write_file&gt;{"path": "data.txt", "content": "Local model will win"}&lt;/function&gt;</code></pre>
+<p>No error, no warning—just silently wrong. I restarted with <code>--jinja</code> (which enables the model’s chat template and tool-call parser). The wrapper changed to <code>&lt;tools&gt;</code>, but the result was the same.</p>
+<p>So I switched to <strong>Qwen2.5-3B-Instruct</strong>. For this successful run, I started the server with the following command from my shell history:</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="ex">llama-server</span> <span class="dt">\</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">-hf</span> Qwen/Qwen2.5-3B-Instruct-GGUF:Q4_K_M <span class="dt">\</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">-c</span> 2048 <span class="dt">\</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">-np</span> 1 <span class="dt">\</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">--cache-ram</span> 0 <span class="dt">\</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">-ngl</span> 99 <span class="dt">\</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">--host</span> 127.0.0.1 <span class="dt">\</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">--port</span> 8080</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>I was using llama.cpp version 9670 (<code>02810c7aa</code>). This time the arguments streamed token-by-token, exactly like OpenAI:</p>
+<pre class="text"><code>''
+'{"'
+'{"path'
+'{"path":"'
+'{"path":"data'
+'{"path":"data.txt'
+'{"path":"data.txt","'
+'{"path":"data.txt","content'
+'{"path":"data.txt","content":"'
+'{"path":"data.txt","content":"Local'
+'{"path":"data.txt","content":"Local model'
+'{"path":"data.txt","content":"Local model will'
+'{"path":"data.txt","content":"Local model will win'
+'{"path":"data.txt","content":"Local model will win"}'
+
+Final: {"path":"data.txt","content":"Local model will win"}</code></pre>
+<p>And it worked without <code>--jinja</code> too. Yet the 14B Coder failed silently regardless of flags.</p>
+<p>It turns out llama.cpp has had tool-call argument streaming since <a href="https://github.com/ggml-org/llama.cpp/pull/12379">PR #12379</a>, merged in May 2025—roughly a year before Armin’s post.</p>
+<p>So based on this experiment it seems that the capability isn’t missing. The roughness is about <strong>which model you pick</strong>: a user reaching for the bigger Coder variant gets silent failure, while the 3B Instruct works fine.</p>
+</section>
+<section id="conclusion" class="level3">
+<h3 class="anchored" data-anchor-id="conclusion">Conclusion</h3>
+<p>All right, I think it’s the end of this exploration. Honestly, it’s really amazing to have access to all these models for free and inference engines for local development or in the cloud. Even with Modal, I don’t have to worry about the infrastructure or Kubernetes nightmare.</p>
+<p>But I agree with Armin that because the space is evolving so quickly, it’s fragmented. The critical mass isn’t always there to support all the options, and the tech isn’t always as polished as we’d hope. The capability for fine-grained tool-call streaming exists in llama.cpp today, but finding the right model and flags is still trial and error. But it feels like it’s getting closer every day.</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    setTimeout(function() {
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
+    tippyHover(ref, function() {
+      var popup = window.document.createElement('div');
+      cites.forEach(function(cite) {
+        var citeDiv = window.document.createElement('div');
+        citeDiv.classList.add('hanging-indent');
+        citeDiv.classList.add('csl-entry');
+        var biblioDiv = window.document.getElementById('ref-' + cite);
+        if (biblioDiv) {
+          citeDiv.innerHTML = biblioDiv.innerHTML;
+        }
+        popup.appendChild(citeDiv);
+      });
+      return popup.innerHTML;
+    });
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

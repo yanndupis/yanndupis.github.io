@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/tool-call-streaming/index.html",
       "/posts/moose-hf-inference/moose_hf_blog.html",
       "/posts/perceiver-io-experiment/perceiver_io_from_scratch.html"
     ]
