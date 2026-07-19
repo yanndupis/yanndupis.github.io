@@ -10,9 +10,10 @@ website:
         href: https://github.com/yanndupis
       - icon: twitter
         href: https://twitter.com/YannDupis
+      - icon: linkedin
+        href: https://linkedin.com/in/yanndupis
 format:
   html:
     theme: litera
     css: styles.css
-
 
