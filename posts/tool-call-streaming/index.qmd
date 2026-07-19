@@ -7,6 +7,8 @@ format:
 author: "Yann Dupis"
 date: "2026-07-17"
 categories: [local models, tool calling, inference]
+image: "thumbnail.svg"
+image-alt: "Comparison of tool-call argument streaming in OpenAI, SGLang, and llama.cpp"
 ---
 
 ### Intro
