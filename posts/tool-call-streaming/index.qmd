@@ -19,18 +19,9 @@ This matters for applications that display, validate, or process arguments befor
 
 In this post, I reproduce those differences and investigate how the model, chat template, parser, and inference engine contribute to them.
 
-A few weeks ago, I was really inspired by Armin's blog post about local models: [Pushing Local Models With Focus And Polish](https://lucumr.pocoo.org/2026/5/8/local-models/). It does an amazing job of stating the current state, challenges, and why having access to efficient local models matters:
+I got interested in this after reading Armin Ronacher’s post, [Pushing Local Models With Focus and Polish](https://lucumr.pocoo.org/2026/5/8/local-models/). One detail that stood out to me was tool-call streaming. It sounds minor, but it can make a big difference to how responsive an agent feels.
 
-> "I really, really want local models to work.
->
-> I want them to work in the very practical sense that I can open my coding agent, pick a local model, and get something that feels competitive enough that I do not immediately switch back to a hosted API after five minutes. There are a lot of reasons why I want this, but the biggest quite frankly is that we're so early with this stuff, and the thought of locking all the experimentation away from the average developer really upsets me."
-> Armin Ronacher
-
-He argues that the main reason local models aren't competitive yet is that the space is too fragmented. There are many inference engines (llama.cpp, vLLM, MLX), many models to choose from (Qwen 3.6, DeepSeek V4, GLM 5.2, etc.), and many parameters to select such as quantization and context size. The critical mass isn't big enough to make the entire ecosystem competitive with closed-source options. Instead, he suggests we should pick one model, one inference engine, and a series of defaults, and make that combination very, very good, so we don't want to switch back to closed-source options right away. He advocates for DeepSeek V4 Flash running on a beefy Mac with the inference engine [ds4](https://github.com/antirez/ds4). I'll let you read the blog to find out why he's betting on this combination.
-
-Since Armin wrote that, events have only reinforced the case for local alternatives, most notably when the US government sent a directive to [suspend access to Fable 5 and Mythos 5](https://www.anthropic.com/news/fable-mythos-access).
-
-I've been wanting to blog again for a long time. I worked for several years at the intersection of privacy and AI, so exploring local models seemed a natural fit. In his post, to illustrate that local solutions are lacking, Armin mentions that local options often don't support streaming function calls. It might seem like a small detail, but I thought deploying several LLMs using different inference engines and checking whether they stream function calls could be a good way to get a feel for where the local ecosystem actually stands today.
+I wanted to see how well it actually works with local inference servers. So I kept the client code the same and compared OpenAI, SGLang, and llama.cpp.
 
 ### What is tool-call streaming?
 
