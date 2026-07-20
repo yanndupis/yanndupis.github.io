@@ -27,11 +27,11 @@ I wanted to see how well it actually works with local inference servers. So I ke
 
 Tool calling (or function calling) enables LLMs to interface with external tools and data. It can be any tool: get weather, SQL execution, bash, read files, write files. You just need to define the function signature (name, input parameters, and descriptions) through a JSON schema. The LLM doesn't call the function directly; it emits a tool-call message containing the function name and arguments. You parse this message, call the actual function, and return the response back to the LLM.
 
-Streaming consists of emitting one token at a time instead of the entire message at once. Armin argues that the benefit of streaming for tool calls is being able to see if the LLM is actively generating an answer or stuck. But also to interrupt the function call generation early if it's going in the wrong direction or emitting an undesirable tool call like `bash(rm -rf /User/oopsy)`. You're laughing, but this happened recently to this [user](https://x.com/mattshumer_/status/2075657271401390161?s=20) with gpt-5.6-sol...
+Streaming means returning output incrementally as it is generated instead of waiting for the complete response. For tool calls, this lets you see whether the LLM is actively generating an answer or stuck, and lets you interrupt generation early if it is going in the wrong direction or emitting an undesirable tool call like `bash(rm -rf /User/oopsy)`. You're laughing, but this happened recently to this [user](https://x.com/mattshumer_/status/2075657271401390161?s=20) with gpt-5.6-sol...
 
 ### The experiment
 
-The idea is simple: write one piece of client code that makes a streaming tool-call request, then point it at different inference engines by swapping the `base_url`. For each one, we'll watch whether the `arguments` field of the tool call arrives in small fragments (token-by-token) or in big chunks (whole key/value pairs at once).
+The idea is simple: write one piece of client code that makes a streaming tool-call request, then point it at different inference engines by swapping the `base_url`. For each one, we'll watch whether the `arguments` field of the tool call arrives in small, incremental fragments or in big chunks (whole key/value pairs at once).
 
 We used the OpenAI Python SDK throughout, since all three targets (OpenAI's API, SGLang, and llama.cpp) expose an OpenAI-compatible `/v1/chat/completions` endpoint.
 
@@ -114,7 +114,7 @@ print("\nFinal:", args)
 Final: {"path":"data.txt","content":"Local model will win"}
 ```
 
-Here, we can see that OpenAI is generating one token at a time for the tool call. Now let's see if the local engines match it.
+In this run, OpenAI returned the tool-call arguments in small fragments. Now let's see if the local engines match it.
 
 ### SGLang
 
@@ -158,7 +158,7 @@ Here's what came back:
 Final: {"content": "Local model will win","path": "data.txt"}
 ```
 
-The entire `"content"` value arrived in **one chunk**. Unlike OpenAI, it arrived in whole key/value pairs rather than token-by-token. SGLang is technically streaming (we got multiple chunks), but the granularity is dramatically coarser.
+The entire `"content"` value arrived in **one chunk**. Unlike OpenAI's fine-grained fragments, it arrived in whole key/value pairs. SGLang is technically streaming (we got multiple chunks), but the granularity is dramatically coarser.
 
 **Why?** Digging into SGLang's source in [`base_format_detector.py`](https://github.com/sgl-project/sglang/blob/main/python/sglang/srt/function_call/base_format_detector.py), the streaming parser uses a `partial_json_parser` library with this flag:
 
@@ -225,7 +225,7 @@ llama-server \
   --port 8080
 ```
 
-I was using llama.cpp version 9670 (`02810c7aa`). This time the arguments streamed token-by-token, exactly like OpenAI:
+I was using llama.cpp version 9670 (`02810c7aa`). This time the arguments arrived in small fragments, much like OpenAI:
 
 ```text
 ''
