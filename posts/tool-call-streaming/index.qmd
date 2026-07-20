@@ -13,7 +13,7 @@ image-alt: "Comparison of tool-call argument streaming in OpenAI, SGLang, and ll
 
 ### Intro
 
-I ran the same OpenAI SDK tool-calling request against OpenAI, SGLang, and llama.cpp. Despite exposing OpenAI-compatible APIs, they streamed tool-call arguments differently. OpenAI returned fine-grained fragments, SGLang emitted larger chunks, and llama.cpp’s behavior varied by model. In one setup, it even returned the tool call as plain text instead of a structured `tool_calls` event.
+I ran the same OpenAI SDK tool-calling request against OpenAI, SGLang, and llama.cpp. Despite exposing OpenAI-compatible APIs, they streamed tool-call arguments differently. OpenAI returned small argument deltas, SGLang emitted larger chunks, and llama.cpp’s behavior varied by model. In one setup, it even returned the tool call as plain text instead of a structured `tool_calls` event.
 
 This matters for applications that display, validate, or process arguments before generation finishes. In practice, an “OpenAI-compatible” API does not guarantee identical streaming semantics.
 
@@ -31,7 +31,7 @@ Streaming means returning output incrementally as it is generated instead of wai
 
 ### The experiment
 
-The idea is simple: write one piece of client code that makes a streaming tool-call request, then point it at different inference engines by swapping the `base_url`. For each one, we'll watch whether the `arguments` field of the tool call arrives in small, incremental fragments or in big chunks (whole key/value pairs at once).
+The idea is simple: write one piece of client code that makes a streaming tool-call request, then point it at different inference engines by swapping the `base_url`. For each one, we'll watch whether the `arguments` field of the tool call arrives as small deltas or in big chunks (whole key/value pairs at once).
 
 We used the OpenAI Python SDK throughout, since all three targets (OpenAI's API, SGLang, and llama.cpp) expose an OpenAI-compatible `/v1/chat/completions` endpoint.
 
@@ -114,7 +114,7 @@ print("\nFinal:", args)
 Final: {"path":"data.txt","content":"Local model will win"}
 ```
 
-In this run, OpenAI returned the tool-call arguments in small fragments. Now let's see if the local engines match it.
+In this run, OpenAI returned the tool-call arguments as small deltas. Now let's see if the local engines match it.
 
 ### SGLang
 
@@ -158,7 +158,7 @@ Here's what came back:
 Final: {"content": "Local model will win","path": "data.txt"}
 ```
 
-The entire `"content"` value arrived in **one chunk**. Unlike OpenAI's fine-grained fragments, it arrived in whole key/value pairs. SGLang is technically streaming (we got multiple chunks), but the granularity is dramatically coarser.
+The entire `"content"` value arrived in **one chunk**. Unlike OpenAI's small argument deltas, it arrived in whole key/value pairs. SGLang is technically streaming (we got multiple chunks), but the granularity is dramatically coarser.
 
 **Why?** Digging into SGLang's source in [`base_format_detector.py`](https://github.com/sgl-project/sglang/blob/main/python/sglang/srt/function_call/base_format_detector.py), the streaming parser uses a `partial_json_parser` library with this flag:
 
@@ -225,7 +225,7 @@ llama-server \
   --port 8080
 ```
 
-I was using llama.cpp version 9670 (`02810c7aa`). This time the arguments arrived in small fragments, much like OpenAI:
+I was using llama.cpp version 9670 (`02810c7aa`). This time the arguments arrived as small deltas, much like OpenAI:
 
 ```text
 ''
@@ -256,4 +256,4 @@ So based on this experiment it seems that the capability isn't missing. The roug
 
 All right, I think it's the end of this exploration. Honestly, it's really amazing to have access to all these models for free and inference engines for local development or in the cloud. Even with Modal, I don't have to worry about the infrastructure or Kubernetes nightmare.
 
-But I agree with Armin that because the space is evolving so quickly, it's fragmented. The critical mass isn't always there to support all the options, and the tech isn't always as polished as we'd hope. The capability for fine-grained tool-call streaming exists in llama.cpp today, but finding the right model and flags is still trial and error. But it feels like it's getting closer every day.
+But I agree with Armin that because the space is evolving so quickly, it's fragmented. The critical mass isn't always there to support all the options, and the tech isn't always as polished as we'd hope. The capability to stream tool-call arguments as small deltas exists in llama.cpp today, but finding the right model and flags is still trial and error. But it feels like it's getting closer every day.
