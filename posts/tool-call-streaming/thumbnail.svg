@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800" role="img" aria-labelledby="title description">
   <title id="title">Tool-call streaming comparison</title>
-  <desc id="description">OpenAI and llama.cpp stream tool-call arguments token by token, while the observed SGLang response arrives in larger chunks.</desc>
+  <desc id="description">OpenAI and llama.cpp returned fine-grained tool-call argument deltas, while the observed SGLang response arrived in larger chunks.</desc>
 
   <rect width="1200" height="800" fill="#f7f7f5"/>
 
@@ -11,7 +11,7 @@
     <rect width="330" height="465" rx="18" fill="#ffffff" stroke="#d8dadd" stroke-width="3"/>
     <circle cx="42" cy="43" r="11" fill="#2f7d6d"/>
     <text x="68" y="54" fill="#252a31" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="36" font-weight="650">OpenAI</text>
-    <text x="34" y="113" fill="#2f7d6d" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="18" font-weight="700" letter-spacing="2">TOKEN BY TOKEN</text>
+    <text x="34" y="113" fill="#2f7d6d" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="18" font-weight="700" letter-spacing="2">FINE-GRAINED</text>
 
     <rect x="34" y="155" width="262" height="216" rx="12" fill="#1f2933"/>
     <rect x="58" y="184" width="36" height="18" rx="9" fill="#7dd3c7"/>
@@ -50,7 +50,7 @@
     <rect width="330" height="465" rx="18" fill="#ffffff" stroke="#d8dadd" stroke-width="3"/>
     <circle cx="42" cy="43" r="11" fill="#426c9e"/>
     <text x="68" y="54" fill="#252a31" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="36" font-weight="650">llama.cpp</text>
-    <text x="34" y="113" fill="#426c9e" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="18" font-weight="700" letter-spacing="2">TOKEN BY TOKEN</text>
+    <text x="34" y="113" fill="#426c9e" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="18" font-weight="700" letter-spacing="2">FINE-GRAINED</text>
 
     <rect x="34" y="155" width="262" height="216" rx="12" fill="#1f2933"/>
     <rect x="58" y="184" width="30" height="18" rx="9" fill="#93b7df"/>
