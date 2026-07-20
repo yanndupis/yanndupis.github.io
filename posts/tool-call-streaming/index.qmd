@@ -129,6 +129,8 @@ Here, we can see that OpenAI is generating one token at a time for the tool call
 
 For the first local engine, I deployed Qwen 3.6 27B (FP8) on [Modal](https://modal.com) using SGLang. I used a repo I'd previously built [pi-modal-deploy](https://github.com/yanndupis/pi-modal-deploy) which deploys SGLang on Modal GPUs and exposes an OpenAI-compatible `/v1` endpoint. It took care of the model weights, SGLang server config, and speculative decoding, so I could just point the OpenAI SDK at the Modal URL.
 
+For reproducibility, the deployment used the SGLang `v0.5.12.post1-cu130-runtime` image and pinned the Qwen model checkpoint to commit [`e89b16ebf1988b3d6befa7de50abc2d76f26eb09`](https://huggingface.co/Qwen/Qwen3.6-27B-FP8/commit/e89b16ebf1988b3d6befa7de50abc2d76f26eb09).
+
 Same client code, just a different `base_url`:
 
 ```python
