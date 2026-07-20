@@ -169,14 +169,14 @@ ul.task-list li input[type="checkbox"] {
 
 <div class="quarto-listing quarto-listing-container-default" id="listing-listing">
 <div class="list quarto-listing-default">
-<div class="quarto-post image-right" data-index="0" data-categories="local models,tool calling,inference" data-listing-date-sort="1784271600000" data-listing-file-modified-sort="1784477986638" data-listing-reading-time-sort="8.655">
+<div class="quarto-post image-right" data-index="0" data-categories="local models,tool calling,inference" data-listing-date-sort="1784271600000" data-listing-file-modified-sort="1784517840138" data-listing-reading-time-sort="9.26">
 <div class="thumbnail">
 <p><a href="./posts/tool-call-streaming/index.html"> <img src="./posts/tool-call-streaming/thumbnail.svg" class="thumnail-image" alt="Comparison of tool-call argument streaming in OpenAI, SGLang, and llama.cpp"> </a></p>
 </div>
 <div class="body">
 <a href="./posts/tool-call-streaming/index.html">
 <h3 class="no-anchor listing-title">
-Testing Tool-Call Streaming with SGLang and llama.cpp
+Tool-Call Streaming Behaves Differently Across OpenAI, SGLang, and llama.cpp
 </h3>
 <div class="listing-subtitle">
 
@@ -195,7 +195,7 @@ inference
 </div>
 <a href="./posts/tool-call-streaming/index.html">
 <div class="listing-description">
-A few weeks ago, I was really inspired by Armin’s blog post about local models: Pushing Local Models With Focus And Polish. It does an amazing job of stating the current state, challenges, and why having access to efficient local models matters:
+I ran the same OpenAI SDK tool-calling request against OpenAI, SGLang, and llama.cpp. Despite exposing OpenAI-compatible APIs, they streamed tool-call arguments differently. OpenAI returned fine-grained fragments, SGLang emitted larger chunks, and llama.cpp’s behavior varied by model. In one setup, it even returned the tool call as plain text instead of a structured <code>tool_calls</code> event.
 </div>
 </a>
 </div>
@@ -210,7 +210,7 @@ Yann Dupis
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="1" data-categories="deep learning,mpc,cryptography" data-listing-date-sort="1673251200000" data-listing-file-modified-sort="1784477986630" data-listing-reading-time-sort="5.52">
+<div class="quarto-post image-right" data-index="1" data-categories="deep learning,mpc,cryptography" data-listing-date-sort="1673251200000" data-listing-file-modified-sort="1784517840127" data-listing-reading-time-sort="5.52">
 <div class="thumbnail">
 <p><a href="./posts/moose-hf-inference/moose_hf_blog.html"> <img src="./posts/moose-hf-inference/img/moose_cow_bay.jpeg" class="thumnail-image"> </a></p>
 </div>
@@ -251,7 +251,7 @@ Yann Dupis
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="2" data-categories="deep learning,code,from scratch" data-listing-date-sort="1667199600000" data-listing-file-modified-sort="1784477986637" data-listing-reading-time-sort="17.91">
+<div class="quarto-post image-right" data-index="2" data-categories="deep learning,code,from scratch" data-listing-date-sort="1667199600000" data-listing-file-modified-sort="1784517840137" data-listing-reading-time-sort="17.91">
 <div class="thumbnail">
 <p><a href="./posts/perceiver-io-experiment/perceiver_io_from_scratch.html"> <img src="./posts/perceiver-io-experiment/img/cross-attention.png" class="thumnail-image"> </a></p>
 </div>
